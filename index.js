@@ -22,12 +22,38 @@ app.get ('/algo', (req, res) => {
 })
 
 app.post ('/otroalgo', (req, res) => {
-    res.status(403).send("Otroalgo")
+    res.status(404).send("Otroalgo");
 })
 
 app.patch ('/unomas', (req, res) => {
-    res.status(265).send("Y este es el último :D")
+    res.status(404).send("Y este es el último :D");
 })
+
+///
+
+//app.get('/hola', (req, res, next) => {
+  //  console.log("hola")
+//})
+
+app.all ('*', (req, res, next) => {
+    console.log('Este es un middleware', req.path)
+    next()
+})
+
+app.get('/rutarep', (req, res) => {
+    res.send("Este sí se ve :D ");
+})
+
+app.get('/rutarep', (req, res) => {
+    res.send("Este no se ve :() ");
+})
+
+app.get('/bai', (req, res) => {
+    res.send("5, 4, 3, 2, 1, 0")
+})
+
+
+
 
 app.listen(3000, function () {
         console.log('Corriendo :)');
