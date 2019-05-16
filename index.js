@@ -77,6 +77,51 @@ app.post('/libros', (req, res) => {
      }
 });
 
+/////////////////////////////////////////////////////
+
+
+/// jwt permite agregar tokens
+//jwt token decode
+//no mandarlo en las cookies, mandarlo en las headers, esas sí van encriptadas
+//sempre que tengamos url de autentificacion (passwords) manejarlos con post por seguridad
+//usualmente lo que verifica los tokens es un middleware, debe estar despues de las funciones de autentificacion y antes de la aPi
+
+const jwt= require ('jsonwebtoken');
+const Llave = "Ya me cansé :(" 
+
+app.post('/auth/signin', (req, res) => {
+    if (!(req.body.usuario && req.body.palabramagica)){
+        res.status(400).send('Ya deja de llegar aqui por favor :(')
+    }
+    //aqui se debe revisar si un usuario existe en la base de datos
+    jwt.sign({user: req.body.usuario, theme: 'black' }, Llave, function(err, token) {
+        if(err) {
+            res.send(500).end('Noup');
+        } else {
+            res.status(200).send({token: token})
+        }
+    })
+});
+
+app.use ((req, res, next) => {
+    jwt.verify(req.headers.authorization, Llave, function(err, decoded) {
+        if(err) {
+            res.status(500).end('aqui')
+        } else {
+            console.log(decoded)
+            // checar ese usuario en la base datos a ver si existe
+            next ()
+        }
+    });
+})
+
+app.get('/taquito', (req, res) => {
+    res.send('si hay taquitos')
+})
+
+
+
+
 app.listen(3000, function () {
         console.log('Corriendo :)');
       });
