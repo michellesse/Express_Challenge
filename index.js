@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 const path = require ('path')
+const bodyParser= require ('body-parser') // libreria  Node.js body parsing middleware.body-parser extract the entire body portion of an incoming request stream and exposes it on req.body.
+const cookieParser= require ('cookie-parser') //
 
 app.get('/hello', function (req, res) {
   res.send('Hello World!');
@@ -35,6 +37,8 @@ app.patch ('/unomas', (req, res) => {
   //  console.log("hola")
 //})
 
+//app.use ->estamos diciendo que es u nmiddleware
+
 app.all ('*', (req, res, next) => {
     console.log('Este es un middleware', req.path)
     next()
@@ -52,8 +56,26 @@ app.get('/bai', (req, res) => {
     res.send("5, 4, 3, 2, 1, 0")
 })
 
+///
+let arrlibros = [];
 
+app.use(bodyParser.json())
+app.use(cookieParser())
 
+app.get ('/libros', (req, res) => {
+    res.status(200).send({data: arrlibros});
+    console.log(req.cookies);
+} )
+
+app.post('/libros', (req, res) => {
+    console.log(req.body);
+    if (req.body.titulo && req.body.autor) {
+        arrlibros.push(req.body);
+         res.status(201).send("yeii!");
+     } else {
+         res.status(400).send({error: "no lo hiciste bien"})
+     }
+});
 
 app.listen(3000, function () {
         console.log('Corriendo :)');
