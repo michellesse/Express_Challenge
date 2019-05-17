@@ -101,23 +101,25 @@ app.post('/auth/signin', (req, res) => {
             res.status(200).send({token: token})
         }
     })
-});
+})
 
-app.use ((req, res, next) => {
+app.use ((req, res, next) => { 
     jwt.verify(req.headers.authorization, Llave, function(err, decoded) {
         if(err) {
-            res.status(500).end('aqui')
+            res.status(500).end
         } else {
+            console.log('aqui sí llega')
             console.log(decoded)
             // checar ese usuario en la base datos a ver si existe
             next ()
         }
-    });
+    })
 })
 
-app.get('/taquito', (req, res) => {
-    res.send('si hay taquitos')
-})
+ app.get ('/taquitos', (req, res) => {
+    console.log("llego al final :D");
+    res.send('Sí hay taquitos');
+} )
 
 
 
